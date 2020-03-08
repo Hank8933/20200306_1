@@ -1,22 +1,110 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
 void playerA ()
 {
-    int i,j,k,m,n;
-    char colors [3125][6], avail [6] = {'R', 'G', 'B', 'Y' , 'O'};
+    srand(time(NULL));
+    int i,j,k,m,n,p,q=3125;
+    char guess[6];
+    int b,w,b1,w1;
+    char temparray[6];
+    char colors [3125][6], avail [6] = {'R', 'G', 'B', 'Y', 'O'};
     for (i = 0; i < 5; i++)
         for (j = 0; j < 5; j++)
             for (k = 0; k < 5; k++)
                 for (m = 0; m < 5; m++)
                     for (n = 0; n < 5; n++)
                     {
-                        colors [i*5+j*5+k*5+m*5+n][0] = avail [i];
-                        colors [i*5+j*5+k*5+m*5+n][1] = avail [j];
-                        colors [i*5+j*5+k*5+m*5+n][2] = avail [k];
-                        colors [i*5+j*5+k*5+m*5+n][3] = avail [m];
-                        colors [i*5+j*5+k*5+m*5+n][4] = avail [n];
+                        colors[p][5] = '\0';
+                        colors[p][0] = avail[i];
+                        colors[p][1] = avail[j];
+                        colors[p][2] = avail[k];
+                        colors[p][3] = avail[m];
+                        colors[p++][4] = avail[n];
                     }
+    printf("請想好由 [R] [G] [B] [Y] [O] 所組成的5個字(可重複) eg: [RGBBB]，五秒後開始遊戲\n");
+    Sleep(1000);
+    n=0;
+
+    for (;;)
+    {
+        b=0;
+        w=0;
+        n++;
+
+        if (n==1)
+        {
+            for (i=0; i<5; i++)
+            {
+                guess[i] = avail[rand()%5];
+            }
+        }else if (m==0)
+        {
+            printf("\n無解!");
+            return ;
+        }
+        else
+        {
+            j=rand()%m;
+            //printf("%d %d \n",j,m);
+            for (i=0; i<6; i++)
+            {
+                guess[i] = colors[j][i];
+            }
+        }
+
+        printf("\n第 %d 輪: ",n);
+
+        printf("%s 請輸入 [Black pins] and [White pins] 數量: ",guess);
+        scanf("%d %d",&b,&w);
+        if (b==5)
+        {
+            printf("\n遊戲結束!，電腦總共用了 %d 輪猜出。",n);
+            break;
+        }
+
+        m=0;
+
+        for (i=0; i<q; i++)
+        {
+            for (j=0; j<5; j++)
+            {
+                temparray[j]=colors[i][j];
+            }
+            temparray[5] = '\0';
+
+            b1=0;
+            w1=0;
+            for (k=0; k<5; k++)
+            {
+                if (temparray[k]==guess[k])
+                    b1++;
+                for (j=0; j<5; j++)
+                {
+                    if (temparray[k]==guess[j])
+                    {
+                        w1++;
+                        temparray[k]='X';
+                        break;
+                    }
+                }
+            }
+
+            w1-=b1;
+            //printf("%s\n",colors[i]);
+            if (b==b1&&w==w1)
+                {
+                    //printf("%s %d %d ",colors[i],b,w);
+                    for (p=0;p<6;p++)
+                    {
+                        colors[m][p]=colors[i][p];
+                    }
+                    m++;
+                }
+        }
+        q=m;
+    }
 }
 
 void playerB ()
@@ -27,15 +115,14 @@ void playerB ()
     int b,w;  //Black pins & White pins
     char guess[6];
     char colors[6] = {'\0'};
-    char avail[6] = {'R', 'G', 'B', 'Y' , 'O'};
-    char temparray[6];
+    char avail[6] = {'R', 'G', 'B', 'Y', 'O'};
 
-    for (i=0;i<5;i++)
+    for (i=0; i<5; i++)
     {
-        colors [i] = avail[rand()%5];
+        colors[i] = avail[rand()%5];
     }
 
-    printf("%s\n",colors);
+    //printf("%s\n",colors);
 
     printf("請輸入由 [R] [G] [B] [Y] [O] 所組成的5個字(可重複) eg: [RGBBB]\n");
     for (;;)
@@ -46,11 +133,11 @@ void playerB ()
         printf("\n第 %d 輪: ",n);
         scanf("%s",guess);
         //printf("%s\n",guess);
-        for (i=0;i<5;i++)
+        for (i=0; i<5; i++)
         {
             if (colors[i]==guess[i])
                 b++;
-            for (j=0;j<5;j++)
+            for (j=0; j<5; j++)
             {
                 if (colors[i]==guess[j])
                 {
@@ -68,9 +155,6 @@ void playerB ()
             break;
         }
     }
-
-
-
 }
 
 int main()
