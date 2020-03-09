@@ -23,8 +23,9 @@ void playerA ()
                         colors[p][3] = avail[m];
                         colors[p++][4] = avail[n];
                     }
+
     printf("請想好由 [R] [G] [B] [Y] [O] 所組成的5個字(可重複) eg: [RGBBB]，五秒後開始遊戲\n");
-    Sleep(1000);
+    Sleep(5000);
     n=0;
 
     for (;;)
@@ -41,7 +42,7 @@ void playerA ()
             }
         }else if (m==0)
         {
-            printf("\n無解!");
+            printf("\n無解!\n");
             return ;
         }
         else
@@ -60,11 +61,11 @@ void playerA ()
         scanf("%d %d",&b,&w);
         if (b==5)
         {
-            printf("\n遊戲結束!，電腦總共用了 %d 輪猜出。",n);
+            printf("\n遊戲結束!，電腦總共用了 %d 輪猜出。\n",n);
             break;
         }
 
-        m=0;
+        m=0;  //可能答案數量
 
         for (i=0; i<q; i++)
         {
@@ -76,11 +77,14 @@ void playerA ()
 
             b1=0;
             w1=0;
-            for (k=0; k<5; k++)
+            for (j=0; j<5; j++) // 找黑標
             {
-                if (temparray[k]==guess[k])
+                if (temparray[j]==guess[j])
                     b1++;
-                for (j=0; j<5; j++)
+            }
+            for (j=0; j<5; j++) // 找白標
+            {
+                for (k=0; k<5; k++)
                 {
                     if (temparray[k]==guess[j])
                     {
@@ -92,10 +96,10 @@ void playerA ()
             }
 
             w1-=b1;
-            //printf("%s\n",colors[i]);
+            //printf("%s %d %d ",colors[i],b1,w1);  //所有陣列
             if (b==b1&&w==w1)
                 {
-                    //printf("%s %d %d ",colors[i],b,w);
+                    //printf("[%s] %d %d ",colors[i],b,w);  //所有符合
                     for (p=0;p<6;p++)
                     {
                         colors[m][p]=colors[i][p];
@@ -104,6 +108,7 @@ void playerA ()
                 }
         }
         q=m;
+        //printf("m=%d\n",m);  //符合數
     }
 }
 
@@ -122,7 +127,7 @@ void playerB ()
         colors[i] = avail[rand()%5];
     }
 
-    //printf("%s\n",colors);
+    printf("%s\n",colors);
 
     printf("請輸入由 [R] [G] [B] [Y] [O] 所組成的5個字(可重複) eg: [RGBBB]\n");
     for (;;)
@@ -132,11 +137,14 @@ void playerB ()
         n++;
         printf("\n第 %d 輪: ",n);
         scanf("%s",guess);
-        //printf("%s\n",guess);
-        for (i=0; i<5; i++)
+
+        for (i=0; i<5; i++)// 找黑標
         {
             if (colors[i]==guess[i])
                 b++;
+        }
+        for (i=0; i<5; i++)// 找白標
+        {
             for (j=0; j<5; j++)
             {
                 if (colors[i]==guess[j])
@@ -151,7 +159,7 @@ void playerB ()
         printf("Black pins: %d ,White pins: %d\n",b,w);
         if (b==5)
         {
-            printf("\n遊戲結束!，你總共用了 %d 輪猜出。",n);
+            printf("\n遊戲結束!，你總共用了 %d 輪猜出。\n",n);
             break;
         }
     }
@@ -180,5 +188,6 @@ int main()
     }
     while (!((player == 'A') || (player == 'B')));
 
+    system("pause");
     return 0;
 }
