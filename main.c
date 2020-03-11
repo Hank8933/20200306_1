@@ -37,7 +37,7 @@ int white (char *array,char *array2)  //找白標
 void playerA ()
 {
     srand(time(NULL));
-    int i,j,k,m,n,p,q=3125;
+    int i,j,k,m,n,p=0,q=3125;
     char guess[6];
     int b,w,b1,w1;
     char temparray[6];
